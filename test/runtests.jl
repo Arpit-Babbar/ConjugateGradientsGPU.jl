@@ -33,8 +33,8 @@ function test_cg_gpu(n=100; backend=CPU(), eltype = Float32)
     tA_ = Array(sprandn(Float32, n, n, 0.1f0) + spdiagm(0=>fill(10.0f0, n)))
     b_ = rand(Float32, n)
     
-    for j in 1:100
-        for i in 1:100
+    for j in 1:n
+        for i in 1:n
             @allowscalar tA[i,j] = tA_[i,j]
         end
         @allowscalar b[j] = b_[j]
@@ -45,7 +45,7 @@ function test_cg_gpu(n=100; backend=CPU(), eltype = Float32)
     b_cpu = Array(b)
     true_x_ = A_cpu\b_cpu
     
-    for i in 1:100
+    for i in 1:n
         @allowscalar true_x[i] = true_x_[i]
     end
 

@@ -1,24 +1,26 @@
 using KernelAbstractions
 
 # Data container
-struct CGData{ArrayType, AbstractBackend}
-    r::ArrayType
-    z::ArrayType
-    p::ArrayType
-    Ap::ArrayType
+struct CGData{T <: Real, AbstractBackend <: KernelAbstractions.Backend}
+    r::AbstractVector{T}
+    z::AbstractVector{T}
+    p::AbstractVector{T}
+    Ap::AbstractVector{T}
     backend::AbstractBackend
-    CGData(n::Int, T::Type, backend) = new{typeof(KernelAbstractions.zeros(backend, eltype(T), n)), typeof(backend)}(
-        KernelAbstractions.zeros(backend, eltype(T), n), KernelAbstractions.zeros(backend, eltype(T), n),
-        KernelAbstractions.zeros(backend, eltype(T), n), KernelAbstractions.zeros(backend, eltype(T), n))
+    CGData(n::Int, T::Type, backend::KernelAbstractions.Backend) = new{T, typeof(backend)}(
+        KernelAbstractions.zeros(backend, eltype(T), n),
+        KernelAbstractions.zeros(backend, eltype(T), n),
+        KernelAbstractions.zeros(backend, eltype(T), n),
+        KernelAbstractions.zeros(backend, eltype(T), n))
 end
 
 # Solves for x
 function cg!(A, b::AbstractVector{T}, x::AbstractVector{T};
-             tol::Float64=1e-6, maxIter::Int64=100,
+             tol::T=map(T,1e-6), maxIter::Int=100,
              precon=copy!,
              data=CGData(length(b), T, get_backend(b))) where {T<:Real}
-    if genblas_nrm2(b) == 0.0f0
-        x .= 0.0f0
+    if genblas_nrm2(b) == zero(T)
+        x .= zero(T)
         return 1, 0
     end
     A(data.r, x)
@@ -56,7 +58,7 @@ end
 
 # API
 function cg(A, b::AbstractVector{T};
-            tol::Float64=1e-6, maxIter::Int64=100,
+            tol::T=map(T, 1e-6), maxIter::Int=100,
             precon=copy!,
             data=CGData(length(b), T, get_backend(b))) where {T<:Real}
     backend = get_backend(b)

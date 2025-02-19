@@ -37,7 +37,7 @@ function cg!(A, b::AbstractVector{T}, x::AbstractVector{T};
         A(data.Ap, data.p)
         gamma = genblas_dot(data.r, data.z)
         alpha = gamma/genblas_dot(data.p, data.Ap)
-        if alpha == Inf || alpha < 0 && demand_positivity
+        if alpha == Inf || (alpha < 0 && demand_positivity)
             return -13, iter
         end
         # x += alpha*p

@@ -92,7 +92,8 @@ function bicgstab(A, b::AbstractVector{T};
                   tol::T=map(T, 1e-6), maxIter::Int64=100,
                   tolRho::T=map(T, 1e-40), precon=copy!,
                   data=BiCGStabData(length(b), T, get_backend(b))) where {T<:Real}
-    x = zeros(eltype(b), length(b))
+    backend = get_backend(b)
+    x = KernelAbstractions.zeros(backend, eltype(b), length(b))
     exit_code, num_iters = bicgstab!(A, b, x, tol=tol, maxIter=maxIter, tolRho=tolRho, precon=precon, data=data)
     return x, exit_code, num_iters
 end

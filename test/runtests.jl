@@ -1,6 +1,6 @@
 include("test_base.jl")
 
-@testset "ConjugateGradients" begin
+@testset "ConjugateGradientsGPU" begin
     @test test_cg()
     @test test_bicgstab()
 end

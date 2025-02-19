@@ -1,4 +1,4 @@
-module ConjugateGradients
+module ConjugateGradientsGPU
 
 include("genericblas.jl")
 include("reader.jl")

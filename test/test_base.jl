@@ -1,4 +1,4 @@
-using ConjugateGradients
+using ConjugateGradientsGPU
 using LinearAlgebra
 using SparseArrays
 using KernelAbstractions

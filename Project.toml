@@ -1,7 +1,7 @@
-name = "ConjugateGradients"
-uuid = "f59de78d-195d-4e7b-a078-2e47da4c3ad6"
-authors = ["Matt Covalt <matt@kiwiziti.com>"]
-version = "0.1.1"
+name = "ConjugateGradientsGPU"
+uuid = "0cf172c8-095c-46f4-9dd2-d60831738d9b"
+authors = ["Arpit Babbar <arpitbabbar@gmail.com>"]
+version = "0.1.0"
 
 [deps]
 GPUArraysCore = "46192b85-c4d5-4398-a991-12ede77f4527"

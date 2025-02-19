@@ -18,7 +18,8 @@ end
 function cg!(A, b::AbstractVector{T}, x::AbstractVector{T};
              tol::T=map(T,1e-6), maxIter::Int=100,
              precon=copy!,
-             data=CGData(length(b), T, get_backend(b))) where {T<:Real}
+             data=CGData(length(b), T, get_backend(b)),
+             demand_positivity=false) where {T<:Real}
     if genblas_nrm2(b) == zero(T)
         x .= zero(T)
         return 1, 0
@@ -36,7 +37,7 @@ function cg!(A, b::AbstractVector{T}, x::AbstractVector{T};
         A(data.Ap, data.p)
         gamma = genblas_dot(data.r, data.z)
         alpha = gamma/genblas_dot(data.p, data.Ap)
-        if alpha == Inf || alpha < 0
+        if alpha == Inf || alpha < 0 && demand_positivity
             return -13, iter
         end
         # x += alpha*p

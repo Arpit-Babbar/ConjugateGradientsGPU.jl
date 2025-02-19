@@ -19,7 +19,7 @@ function cg!(A, b::AbstractVector{T}, x::AbstractVector{T};
              tol::T=map(T,1e-6), maxIter::Int=100,
              precon=copy!,
              data=CGData(length(b), T, get_backend(b)),
-             demand_positivity=false) where {T<:Real}
+             demand_positivity=true) where {T<:Real}
     if genblas_nrm2(b) == zero(T)
         x .= zero(T)
         return 1, 0
@@ -61,10 +61,12 @@ end
 function cg(A, b::AbstractVector{T};
             tol::T=map(T, 1e-6), maxIter::Int=100,
             precon=copy!,
-            data=CGData(length(b), T, get_backend(b))) where {T<:Real}
+            data=CGData(length(b), T, get_backend(b)),
+            demand_positivity = true) where {T<:Real}
     backend = get_backend(b)
     x = KernelAbstractions.zeros(backend, eltype(b), length(b))
-    exit_code, num_iters = cg!(A, b, x, tol=tol, maxIter=maxIter, precon=precon, data=data)
+    exit_code, num_iters = cg!(A, b, x, tol=tol, maxIter=maxIter, precon=precon, data=data,
+                               demand_positivity=demand_positivity)
     return x, exit_code, num_iters
 end
 
